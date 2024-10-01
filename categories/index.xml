@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on 吴宏伟✊</title>
+        <link>https://ydmy71.github.io/hugo-whw/categories/</link>
+        <description>Recent content in Categories on 吴宏伟✊</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>吴宏伟</copyright>
+        <lastBuildDate>Sat, 07 Oct 2023 17:34:23 +0800</lastBuildDate><atom:link href="https://ydmy71.github.io/hugo-whw/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>C&#43;&#43;11</title>
+        <link>https://ydmy71.github.io/hugo-whw/categories/c&#43;&#43;11/</link>
+        <pubDate>Sat, 07 Oct 2023 17:34:23 +0800</pubDate>
+        
+        <guid>https://ydmy71.github.io/hugo-whw/categories/c&#43;&#43;11/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>C&#43;&#43;基础知识点</title>
+        <link>https://ydmy71.github.io/hugo-whw/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+        <pubDate>Sat, 07 Oct 2023 17:34:23 +0800</pubDate>
+        
+        <guid>https://ydmy71.github.io/hugo-whw/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>STL</title>
+        <link>https://ydmy71.github.io/hugo-whw/categories/stl/</link>
+        <pubDate>Sat, 07 Oct 2023 17:34:23 +0800</pubDate>
+        
+        <guid>https://ydmy71.github.io/hugo-whw/categories/stl/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Test</title>
+        <link>https://ydmy71.github.io/hugo-whw/categories/test/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://ydmy71.github.io/hugo-whw/categories/test/</guid>
+        <description>&lt;img src="https://ydmy71.github.io/hugo-whw/categories/test/hutomo-abrianto-l2jk-uxb1BY-unsplash.jpg" alt="Featured image of post Test" /&gt;</description>
+        </item>
+        
+    </channel>
+</rss>
