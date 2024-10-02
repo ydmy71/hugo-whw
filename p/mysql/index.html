@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="MySQL char vachar 区别 一、长度不同 1、char类型：char类型的长度是固定的。 2、varchar类型：varchar类型的长度是可变的。 二、效率不同 1、char类型：char类型每次修改的数据长度相同，效率更高。 2、varchar类型：varchar类型每次修改的数据长度不同，效率更低。 Mysql有哪些锁？ 全局锁 加上之后整个数据库只处于只读状态\n">
 <title>MySQL</title>
 
 <link rel='canonical' href='https://ydmy71.github.io/hugo-whw/p/mysql/'>
 
 <link rel="stylesheet" href="/hugo-whw/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="MySQL">
-<meta property='og:description' content="">
+<meta property='og:description' content="MySQL char vachar 区别 一、长度不同 1、char类型：char类型的长度是固定的。 2、varchar类型：varchar类型的长度是可变的。 二、效率不同 1、char类型：char类型每次修改的数据长度相同，效率更高。 2、varchar类型：varchar类型每次修改的数据长度不同，效率更低。 Mysql有哪些锁？ 全局锁 加上之后整个数据库只处于只读状态\n">
 <meta property='og:url' content='https://ydmy71.github.io/hugo-whw/p/mysql/'>
 <meta property='og:site_name' content='吴宏伟✊'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-09-15T17:34:23&#43;08:00'/><meta property='article:modified_time' content='2023-09-15T17:34:23&#43;08:00'/><meta property='og:image' content='https://ydmy71.github.io/hugo-whw/p/mysql/oy.jpg' />
 <meta name="twitter:title" content="MySQL">
-<meta name="twitter:description" content=""><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="MySQL char vachar 区别 一、长度不同 1、char类型：char类型的长度是固定的。 2、varchar类型：varchar类型的长度是可变的。 二、效率不同 1、char类型：char类型每次修改的数据长度相同，效率更高。 2、varchar类型：varchar类型每次修改的数据长度不同，效率更低。 Mysql有哪些锁？ 全局锁 加上之后整个数据库只处于只读状态\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://ydmy71.github.io/hugo-whw/p/mysql/oy.jpg' />
     </head>
     <body class="
@@ -238,7 +238,131 @@
     </ol>
 </aside>
 
-    
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#mysql">MySQL</a>
+      <ol>
+        <li><a href="#char-vachar-区别">char vachar 区别</a>
+          <ol>
+            <li><a href="#一长度不同">一、长度不同</a></li>
+            <li><a href="#二效率不同">二、效率不同</a></li>
+          </ol>
+        </li>
+        <li><a href="#mysql有哪些锁">Mysql有哪些锁？</a>
+          <ol>
+            <li><a href="#全局锁">全局锁</a></li>
+            <li><a href="#表级锁">表级锁</a></li>
+            <li><a href="#行锁">行锁</a></li>
+            <li><a href="#意向锁">意向锁：</a></li>
+            <li><a href="#共享锁">共享锁</a></li>
+            <li><a href="#独占锁">独占锁</a></li>
+          </ol>
+        </li>
+        <li><a href="#mysql架构了解">Mysql架构了解</a></li>
+        <li><a href="#索引">索引</a></li>
+        <li><a href="#sql注入攻击">SQL注入攻击</a></li>
+        <li><a href="#mvcc">MVCC</a>
+          <ol>
+            <li><a href="#解决幻读">解决幻读</a></li>
+          </ol>
+        </li>
+        <li><a href="#mvcc-在-rc不可重复读-和-rr可重复读-这种隔离级别下面产生readview的区别">MVCC 在 RC（不可重复读） 和 RR（可重复读） 这种隔离级别下面，产生ReadView的区别?</a></li>
+        <li><a href="#mysql的在rc和rr模式下的锁">MySQL的在RC和RR模式下的锁</a></li>
+        <li><a href="#聚簇索引">聚簇索引</a></li>
+        <li><a href="#聚簇索引和非聚簇索引的区别">聚簇索引和非聚簇索引的区别</a>
+          <ol>
+            <li><a href="#覆盖索引">覆盖索引</a></li>
+            <li><a href="#最左前缀原则">最左前缀原则：</a></li>
+          </ol>
+        </li>
+        <li><a href="#limit用法">Limit用法</a></li>
+        <li><a href="#读写分离">读写分离</a></li>
+        <li><a href="#myisam为什么查询比innodb快">MyISAM为什么查询比Innodb快</a></li>
+        <li><a href="#三范式">三范式</a>
+          <ol>
+            <li><a href="#第一范式">第一范式：</a></li>
+            <li><a href="#第二范式">第二范式：</a></li>
+            <li><a href="#第三范式">第三范式：</a></li>
+          </ol>
+        </li>
+        <li><a href="#事务">事务</a>
+          <ol>
+            <li><a href="#四个特性">四个特性：</a></li>
+          </ol>
+        </li>
+        <li><a href="#并行事务所带来的问题">并行事务所带来的问题</a>
+          <ol>
+            <li><a href="#脏读">脏读：</a></li>
+            <li><a href="#不可重复读">不可重复读</a></li>
+            <li><a href="#幻读">幻读：</a></li>
+          </ol>
+        </li>
+        <li><a href="#隔离级别">隔离级别</a>
+          <ol>
+            <li><a href="#未提交读">未提交读：</a></li>
+            <li><a href="#提交读">提交读</a></li>
+            <li><a href="#可重复读">可重复读</a></li>
+            <li><a href="#可串行化">可串行化</a></li>
+          </ol>
+        </li>
+        <li><a href="#实现隔离级别的方法">实现隔离级别的方法</a>
+          <ol>
+            <li><a href="#加锁">加锁</a></li>
+            <li><a href="#快照">快照</a></li>
+          </ol>
+        </li>
+        <li><a href="#什么sql语句会加行级锁">什么SQL语句会加行级锁？</a></li>
+        <li><a href="#mysql用长连接有什么好处么">Mysql用长连接有什么好处么？</a></li>
+        <li><a href="#mysql日志">MySQL日志</a></li>
+        <li><a href="#为什么要undo-log">为什么要undo log？</a></li>
+        <li><a href="#为什么需要redo-log">为什么需要redo log？</a></li>
+        <li><a href="#为什么需要binlog">为什么需要binlog？</a></li>
+        <li><a href="#redo-log和binlog有什么区别">redo log和binlog有什么区别？</a></li>
+        <li><a href="#主从复制">主从复制</a>
+          <ol>
+            <li><a href="#mysql集群的主从复制过程梳理成三个阶段">MySQL集群的主从复制过程梳理成三个阶段</a></li>
+            <li><a href="#数据库和缓存如何保证一致性">数据库和缓存如何保证一致性？</a></li>
+          </ol>
+        </li>
+        <li><a href="#如何保证两个操作都能执行成功">如何保证两个操作都能执行成功？</a></li>
+        <li><a href="#分库分表">分库分表</a>
+          <ol>
+            <li><a href="#分库">分库：</a></li>
+            <li><a href="#分表">分表：</a></li>
+            <li><a href="#分为水平拆分和垂直拆分">分为水平拆分和垂直拆分</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
 
             <main class="main full-width">
     <article class="has-image main-article">
@@ -323,7 +447,203 @@
     <section class="article-content">
     
     
-    
+    <h2 id="mysql">MySQL
+</h2><h3 id="char-vachar-区别">char vachar 区别
+</h3><h4 id="一长度不同">一、长度不同
+</h4><ul>
+<li>1、char类型：char类型的长度是固定的。</br ></li>
+<li>2、varchar类型：varchar类型的长度是可变的。</br ></li>
+</ul>
+<h4 id="二效率不同">二、效率不同
+</h4><ul>
+<li>1、char类型：char类型每次修改的数据长度相同，效率更高。</li>
+<li>2、varchar类型：varchar类型每次修改的数据长度不同，效率更低。</li>
+</ul>
+<h3 id="mysql有哪些锁">Mysql有哪些锁？
+</h3><h4 id="全局锁">全局锁
+</h4><p>加上之后整个数据库只处于只读状态</br ></p>
+<h4 id="表级锁">表级锁
+</h4><p>不会出现死锁，发生锁冲突几率高，并发低。</br ></p>
+<h4 id="行锁">行锁
+</h4><p>会出现死锁，发生锁冲突几率低，并发高。注意的是，MySQL行锁是通过索引加载的，即是行锁是加在索引响应的行上，若对应SQL语句没有走索引则会走全表扫描，行锁将变为表锁。</br >
+表锁除了会限制别的线程的读写外，也会限制本线程接下来的读写操作</br ></p>
+<h4 id="意向锁">意向锁：
+</h4><p>在使用共享锁或者独占锁之前，需要加上意向锁，意向共享锁和意向独占锁是表级锁，不会和行级的共享锁和独占锁发送冲突，意向锁之间也不会发生冲突，只会和共享锁和独占锁冲突，意向锁是为了快速判断表里是否有纪录被加锁。</br ></p>
+<h4 id="共享锁">共享锁
+</h4><p>可以被多个线程持有，如果对数据加上共享锁后，则其他线程只能对A再加共享锁，不能加排他，只能读不能修改</br ></p>
+<h4 id="独占锁">独占锁
+</h4><p>该锁一次只能被一个线程所持有，如果线程对数据加上排他锁后，则其他线程不能在对这个数据加任何类型的锁，获得排他锁的线程可读可修改。</br ></p>
+<h3 id="mysql架构了解">Mysql架构了解
+</h3><p>首先是连接器，负责和客户端建立连接，获取权限，接下来是查询缓存，若之前查询过，则直接返回结果，但失效太频繁，在更新表后，缓存全没，在8.0后删除了功能，接下来是分析器，对语法进行分析符不符合规范，优化器，对语句进行优化选择索引，最后是执行器，首先判断改表有无执行权限，调用存储引擎提供接口返回给客户端</br ></p>
+<h3 id="索引">索引
+</h3><p>索引 他是mysql存储引擎用的一种加快查询速度的数据结构 </br >
+优点： 可以将随机I/0 改为顺序I/0，提高查询性能，帮助服务器避免排序和临时表</br >
+缺点：从空间角度考虑 建立索引需要占用物理空间</br >
+从时间上考虑的话 维护索引比较花费时间</br >
+常见的索引 有 哈希索引  由哈希表实现 查找特别快 0（1）但是它范围查和顺序查不是很快全文索引 B+树索引 最为有效的索引 是因为它不用扫描全盘 他是按顺序存储的</br >
+B+树 他只有叶子节点存数据  非叶子节点存索引  叶子节点构造一个有序的链表 </br >
+高度更低 io次数更少</br >
+索引最好设置为NOT NULL</br >
+索引列存在NULL就会导致优化器在做索引选择的时候更加复制，难以优化</br >
+NULL值是一个没有意义的值，但是他会占用物理内存，所以会带来存储空间的问题。</br ></p>
+<h3 id="sql注入攻击">SQL注入攻击
+</h3><p>SQL注入是一种常见的网络安全威胁，攻击者通过在用户输入中插入恶意的SQL代码，从而可以执行未经授权的数据库操作。</br >
+用一些正则表达式在输入的时候去解决。</br >
+设置防火墙等。</br >
+MySQL为什么选择B+树来作为索引的数据结构</br ></p>
+<h3 id="mvcc">MVCC
+</h3><p>它是一种用来解决读写冲突的无锁并发控制，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。
+解决以下问题</br >
+在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能。</br >
+同时还可以解决脏读，幻读，不可重复读等事务隔离问题，但不能解决更新丢失问题。</br ></p>
+<h4 id="解决幻读">解决幻读
+</h4><p>针对于快照读 select是通过MVCC方式解决了幻读，首先创建一个Read View 后续的查询语句利用这个Read View,通过这个就可以在undo log版本链找到事务开始时的数据，所以事务过程种每次查询的数据都是一样的。</br >
+针对当前读 update insert delete 是通过记录锁和间歇锁解决了幻读。</br >
+间歇锁就是表中有个范围（3，5）其他事务无法插入 4这条记录。</br ></p>
+<h3 id="mvcc-在-rc不可重复读-和-rr可重复读-这种隔离级别下面产生readview的区别">MVCC 在 RC（不可重复读） 和 RR（可重复读） 这种隔离级别下面，产生ReadView的区别?
+</h3><p>而对于 RC 级别，其实整个过程几乎一样，唯一不同的是生成 ReadView 的时机，RR 级别只在事务开始时生成一次，之后一直使用该 ReadView。而 RC 级别则在每次 select 时，都会生成一个 ReadView。</br ></p>
+<h3 id="mysql的在rc和rr模式下的锁">MySQL的在RC和RR模式下的锁
+</h3><p>RC没有间隙锁</p>
+<h3 id="聚簇索引">聚簇索引
+</h3><p>一种数据存储的方式</br >
+与数据在一起，非聚簇索引得回表</br >
+聚簇索引实际上是一个或多个列的值排序的算法 特点就是数据的顺序和索引的顺序一致 一般情况下主键会默认创建聚簇索引，一张表只允许存在一个聚簇索引</br ></p>
+<h3 id="聚簇索引和非聚簇索引的区别">聚簇索引和非聚簇索引的区别
+</h3><p>聚簇索引就是 叶子节点都是数据节点 但是非聚簇索引的叶子节点仍然是索引节点，只不过有对应数据块的指针</br ></p>
+<h4 id="覆盖索引">覆盖索引
+</h4><p>如果一个索引包含了满足查询语句中字段与条件的数据叫做覆盖索引</br ></p>
+<h4 id="最左前缀原则">最左前缀原则：
+</h4><p>创建 （a,b,c）相当于   a,(a,b),(a,b,c) 所以要把选择性最高的放在前面</br >
+用Explain来查询索引是否被使用</br ></p>
+<h3 id="limit用法">Limit用法
+</h3><p>select * from table limit 2，5；</br >
+意思是查询出第三行数据包括查5个 ，也就是3-7</br ></p>
+<h3 id="读写分离">读写分离
+</h3><p>读写分离常用代理方式来实现，代理服务器接收到读写请求后，然后转发到哪个服务器，主服务器处理写操作以及实时性要求比较高的读操作，而从服务器处理读操作
+读写分离性能高的原因在于主从服务器负责各自的读和写，极大程度缓解了锁的争用
+从服务器可以用MyISAM，提升查询以及节约系统开销</br >
+增加冗余</p>
+<h3 id="myisam为什么查询比innodb快">MyISAM为什么查询比Innodb快
+</h3><ul>
+<li>1）查询时，由于innodb支持事务，所以会有mvvc(多版本并发控制)的一个比较，这个过程会损耗性能。</li>
+<li>2）查询时，如果走了索引，而索引又不是主键索引，此时由于innodb是聚簇索引，会有一个回表的过程，即：先去非聚簇索引树（非主键索引树）中查询数据，找到数据对应的key之后，再通过key回表到聚簇索引树，最后找到需要的数据。而myisam是非聚集索引，而且叶子节点存储的是磁盘地址，所以，查询的时候查到的最后结果不是聚簇索引树的key，而是会直接去查询磁盘。</br ></li>
+<li>3）锁的一个损耗，innodb锁支持行锁，在检查锁的时候不仅检查表锁，还要看行锁。</li>
+</ul>
+<h3 id="三范式">三范式
+</h3><p>范式是关系数据库设计的一种规范，目的是消除冗余，建立合理的数据库，从而提升数据存储和使用的性能。</p>
+<h4 id="第一范式">第一范式：
+</h4><p>保证每个字段不可分 原子性</p>
+<h4 id="第二范式">第二范式：
+</h4><p>保证 每个字段都完全依赖于主键 不能只依赖于一般分， 唯一性和依赖性</p>
+<h4 id="第三范式">第三范式：
+</h4><p>没有传递依赖  任何非主属性不依赖于其他非主属性</p>
+<h3 id="事务">事务
+</h3><p>start transaction</br >
+提交事务</br >
+commit</br >
+保存回滚点</br >
+savepoint</br >
+回滚事务</br >
+rollback[ to 回滚点名]</br >
+启用或关闭自动提交模式</br >
+set autocommited=1;启用</br >
+set autocommited=0 关闭</br ></p>
+<h4 id="四个特性">四个特性：
+</h4><h5 id="原子性">原子性
+</h5><p>要么全部成功 要么全部失败</p>
+<h5 id="一致性">一致性
+</h5><p>数据库总会从一个状态转换成另外一个状态</p>
+<h5 id="隔离性">隔离性
+</h5><p>一个事务所做的修改在提交前 堆其他事务是不可见的</p>
+<h5 id="持久性">持久性
+</h5><p>事务一旦提交 其修改会持久的保存到数据库中，放到缓存池中</p>
+<h3 id="并行事务所带来的问题">并行事务所带来的问题
+</h3><h4 id="脏读">脏读：
+</h4><p>一个事务读到未提交的数据叫脏读</p>
+<h4 id="不可重复读">不可重复读
+</h4><p>在一个事务内读取同一条记录 前后结果不一样</p>
+<h4 id="幻读">幻读：
+</h4><p>在一个事务内按相同条件多次查询 前后结果集的数量不同就叫做幻读</p>
+<h3 id="隔离级别">隔离级别
+</h3><h4 id="未提交读">未提交读：
+</h4><p>没有提交也能被其他事务看到</p>
+<h4 id="提交读">提交读
+</h4><pre><code> 提交后才能被其他事务所看到
+</code></pre>
+<h4 id="可重复读">可重复读
+</h4><p>mysql默认隔离级别  事务在执行期间看到的数据始终与其启动时看到的数据保持一致。这种隔离级别确保同一事务的多个实例在并发读取数据时，会看到同样的数据行</p>
+<h4 id="可串行化">可串行化
+</h4><p>强制事务串行执行 避免幻读问题 每一行数据加锁</p>
+<h3 id="实现隔离级别的方法">实现隔离级别的方法
+</h3><h4 id="加锁">加锁
+</h4><p>对数据前对其加锁 阻止其他事务对数据进行修改</p>
+<h4 id="快照">快照
+</h4><p>读取之前的快照 可重复读可以在读取事务开始的快照去解决不可重复读问题</p>
+<h3 id="什么sql语句会加行级锁">什么SQL语句会加行级锁？
+</h3><p>如果要在查询时对记录加行级锁，叫做锁定读</br >
+还有update和delete会加行级锁，且锁的类型都是独占锁。</br ></p>
+<h3 id="mysql用长连接有什么好处么">Mysql用长连接有什么好处么？
+</h3><p>在长连接模式下，长连接是指在应用程序与数据库建立一次连接后，保持该连接的状态，直到显示关闭连接，</br >
+短链接，即每次数据库操作都建立新的连接并在操作完成后立即关闭连接。</br ></p>
+<h3 id="mysql日志">MySQL日志
+</h3><ul>
+<li>undo log：回滚日志，实现了事务中的原子性，主要用于事务回滚和MVCC</li>
+<li>redo log：重做日志 时innodb引擎生成的日志，实现了事务的持久性，主要用于故障恢复</li>
+<li>binlog归档日志：是Server层生成的日志，主要用于数据备份和主从复制</li>
+</ul>
+<h3 id="为什么要undo-log">为什么要undo log？
+</h3><p>我们在每次执行事务过程种，都要记录下回滚需要的信息到一个日志里，如果Mysql崩溃后，就不用但系无法回滚到事务之前的数据，我们可以通过这个日志回滚到事务之前的数据。</p>
+<h3 id="为什么需要redo-log">为什么需要redo log？
+</h3><p>WAL技术指的是，MYSQL的写操作并不是立刻写在磁盘上的，而是先写日志，在合适的时间在写道磁盘上。</br ></p>
+<ul>
+<li>redo log是物理日志，记录了某个数据页做了什么修改，每当执行一个事务就会产生这样的一条或者多条物理日志。</li>
+<li>redo log记录了此次事务完成后的数据状态，记录的是更新之后的值</li>
+<li>undo log记录了此次事务开始前的数据状态，记录的是更新之前的值</li>
+<li>redo log的方式使用了追加操作，所有磁盘操作是顺序写，写入数据需要先找到写入位置，然后才写到磁盘，所以磁盘操作作是随机写。</li>
+</ul>
+<h3 id="为什么需要binlog">为什么需要binlog？
+</h3><p>binlog文件是记录了所以数据表结构变更和表数据修改的日志，不会记录查询类的操作，比如SELECT和SHOW操作</br ></p>
+<h3 id="redo-log和binlog有什么区别">redo log和binlog有什么区别？
+</h3><p>binlog是Mysql的Server层实现的日志，所有存储引擎都可以使用。</br >
+redo log是Innodb存储引擎实现的日志；</br ></p>
+<h3 id="主从复制">主从复制
+</h3><h4 id="mysql集群的主从复制过程梳理成三个阶段">MySQL集群的主从复制过程梳理成三个阶段
+</h4><ul>
+<li>写入Binlog：主库写binlog日志，提交事务，并更新本地存储数据</li>
+<li>同步binlog：把binog复制到所有从库上，每个从库把binlog写到暂存日志种</li>
+<li>回放binlog回放binlog，并更新存储引擎中的数据</li>
+<li>首先主库收到客户端提交事务的请求之后，会先写入binlog，在提交事务，更新存储引擎中的数据，事务提交完成后，从库会创建一个专门的I/O线程，来接收binlog日志，再把binlog信息写入relay log的中继日志里，然后从库创建一个用于回放binlog的线程，去读relay log中继日志，然后回访binlog更新存储引擎中的数据，最终实现主从的数据一致性。完成之后，可以只在主库中写数据，读数据用从库，这样即使写请求会锁表或者锁记录，也不会印象读请求的执行。</br ></li>
+</ul>
+<h4 id="数据库和缓存如何保证一致性">数据库和缓存如何保证一致性？
+</h4><p>无论是先更新数据库还是在更新缓存，这两个方案都会存在并发问题，当两个请求并发更新同一条数据的时候，可能会出现缓存和数据库数据不一致的现象。</br >
+引下来先更新数据库还是先删除缓存？</br >
+不更新缓存，而是删除缓存中的数据，然后读取数据时，发现缓存中没了数据之后，在从数据库中读取数据，更新到缓存中。</br >
+分为写策略和读策略</br ></p>
+<h5 id="写策略">写策略
+</h5><p>分为
+先更新数据库中的数据 在删除缓存中的数据</br >
+是因为缓存的写入通常要远远快于数据库的写入。</br >
+先删除缓存中的数据 在更新数据库</br ></p>
+<h5 id="读策略">读策略
+</h5><p>如果读取的数据有缓存，则直接返回数据</br >
+如果读取的数据没有命中缓存，则从数据库读数据，然后将数据写入到缓存，并返回给用户。</br >
+如何保证，先更新数据库，在删除缓存这两个操作能执行成功？</br ></p>
+<h3 id="如何保证两个操作都能执行成功">如何保证两个操作都能执行成功？
+</h3><p>消息队列重试机制</br >
+引入消息队列，将第二个要操作的数据加入到消息队列，由消费者来操作数据</br >
+如果应用删除缓存失败，可以从消息队列中重新读取数据，然后在次删除缓存</br >
+如果删除缓存成功，就要把数据从消息队列中移除，避免重复操作，否则就继续重试。</br ></p>
+<h3 id="分库分表">分库分表
+</h3><p>分库分表是一种数据库设计和管理中的一种策略，主要解决随着数据量和并发访问量的增加而带来的性能，和扩展性问题。</p>
+<h4 id="分库">分库：
+</h4><p>将数据按照某种规则，分散到多个独立的数据库中，</p>
+<h4 id="分表">分表：
+</h4><p>将一个大表的数据按照某种规则，分散到多个小表中，每个小表称为一个分片或分表</br >
+分库分表通过将数据，按照某种策略分配到多个数据库节点，或表中，提高了查询和写入性能，增强系统的可扩展性和容错能力。</br ></p>
+<h4 id="分为水平拆分和垂直拆分">分为水平拆分和垂直拆分
+</h4><p>垂直拆分，就是把字段分开</br >
+水平拆分，就是把记录分开</br ></p>
+
 </section>
 
 
