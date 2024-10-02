@@ -13,7 +13,143 @@
         <pubDate>Sat, 23 Mar 2024 17:34:23 +0800</pubDate>
         
         <guid>https://ydmy71.github.io/hugo-whw/p/redis/</guid>
-        <description>&lt;img src="https://ydmy71.github.io/hugo-whw/p/redis/redis.jpg" alt="Featured image of post Redis" /&gt;</description>
+        <description>&lt;img src="https://ydmy71.github.io/hugo-whw/p/redis/redis.jpg" alt="Featured image of post Redis" /&gt;&lt;h2 id=&#34;redis&#34;&gt;Redis
+&lt;/h2&gt;&lt;h3 id=&#34;redis-1&#34;&gt;Redis
+&lt;/h3&gt;&lt;p&gt;首先，Redis是一个开源基于内存的高性能键值对存储系统&lt;/br&gt;
+1 高性能：redis数据存储在内存中，因此可以能够极快的读写操作，它采用单线程模型和异步I/O,避免了多线程的竞争和阻塞，从而达到了非常高的性能。&lt;/br&gt;
+2 数据结构多样性：redis提供了多种数据类型来支持不同的业务场景&lt;/br&gt;
+3持久化支持：redis提高了两种持久化方式，即快照和日志追加。快照方式将Redis内存数据以二进制格式写入磁盘，而AOF则提供追加记录Redis的操作命令来实现持久化。&lt;/br&gt;
+4发布订阅：Redis支持发布订阅模式，可以用作消息代理，发布者将消息发送到指定的频道，订阅者则可以接收和处理这些消息。&lt;/br&gt;
+5.分布式缓存：redis可以通过主从复制和分片来实现数据分布式存储和高可用性。主从复制可以将数据复制多个从节点，实现读写分离和数据备份。而分片则可以将数据分布在多个Redis节点上，实现横向扩展和负载均衡&lt;/br&gt;
+6事务支持 和mysql事务一样&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis事务和mysql事务的原子性区别&#34;&gt;Redis事务和MySQL事务的原子性区别
+&lt;/h3&gt;&lt;p&gt;定义与实现&lt;/br&gt;
+Redis事务是一组命令集合，若有语法错误则整个事务放弃，运行时错误只放弃出错命令，如果出现运行时错误（例如对一个字符串进行算术运算），Redis只会放弃出现的错误的命令，而其他命令会继续执行。&lt;/br&gt;
+Mysql事务的原子性 ，MySQL通过redo log和 undo log来实现事务的原子性，当事务开始时，Mysql会记录所有对数据修改的操作到redo og中，同时也会记录反向操作到undo log中，如果事务执行成功，redo log中的记录会被持久化到磁盘，undo log中的记录可以用于回滚事务，如果事务执行失败，Mysql可以根据undo log中的记录将数据恢复到事务开始之前的状态。&lt;/br&gt;
+应用场景和特点&lt;/br&gt;
+Redis事务用于保证一组命令顺序执行及一定一致性要求的场景，执行是单线程但不能保证绝对一致性&lt;/br&gt;
+Mysql事务用于数据一致性要求高的业务场景，支持多种隔离级别，可通过锁机制保证一致性&lt;/br&gt;
+性能与可靠性&lt;/br&gt;
+性能上，Redis事务执行快，但复杂操作可能影响性能，Mysql事务因磁盘I/O和锁机制性能相对较低但可优化。&lt;/br&gt;
+可靠性上，Redis事务可靠性低，可配置持久化策略提高，Mysql事务可靠性较高，通过日志和回滚保证数据完整。&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis源代码布局&#34;&gt;Redis源代码布局
+&lt;/h3&gt;&lt;p&gt;src：包含了一些C语言编写的Redis实现&lt;/br&gt;
+tests：包含Tcl中实现的单元测试&lt;/br&gt;
+deps：包含Redis使用的库编译 Redis 所需的一切都在此目录中;您的系统只需要提供 、 POSIX 兼容接口和 C 编译器。值得注意的是，包含 的副本，它是 Linux 下 Redis 的默认分配器。
+sever.h&lt;/br&gt;
+定义客户端的数据结构&lt;/br&gt;
+struct client {&lt;/br&gt;
+int fd;//客户端套接字文件描述符&lt;/br&gt;
+sds querybuf;//累积来自客户端的请求，这些请求由 Redis 服务器根据 Redis 协议进行解析，并通过调用客户端正在执行的命令的实现来执行。&lt;/br&gt;
+int argc;//填充客户端执行的命令，以便实现给定Redis命令的函数可以读取参数   &lt;/br&gt;
+robj **argv;&lt;/br&gt;
+redisDb *db;&lt;/br&gt;
+int flags;&lt;/br&gt;
+list *reply;是动态和静态缓冲区，用于累计服务器发送到客户端的回复，一旦文件描述符可写，这些缓冲区就以增量的方式写入套接字    &lt;/br&gt;
+// &amp;hellip; many other fields &amp;hellip;&lt;/br&gt;
+char buf[PROTO_REPLY_CHUNK_BYTES];&lt;/br&gt;
+}&lt;/p&gt;
+&lt;h3 id=&#34;redis支持的数据类型&#34;&gt;Redis支持的数据类型
+&lt;/h3&gt;&lt;h4 id=&#34;1string&#34;&gt;1.string
+&lt;/h4&gt;&lt;p&gt;底层的数据结构为int和SDS&lt;/br&gt;
+SDS不仅可以保存文本数据，还可以保存二进制数据。&lt;/br&gt;
+SDS获取字符串长度的时间复杂度是O(1)&lt;/br&gt;
+SDS结构&lt;/br&gt;
+Redis的SDS API是安全的，拼接字符串不会造成缓冲区溢出。&lt;/br&gt;
+场景：session存储&lt;/br&gt;
+常规计数 例如文章的阅读量&lt;/br&gt;
+SET key value&lt;/br&gt;
+GET 获取&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2list&#34;&gt;2.list
+&lt;/h4&gt;&lt;p&gt;列表，在Redis中的list在底层实现上并不是数组，而是压缩列表或者双向链表，也就是说对于一个具有很多个元素的list来说，在头部和尾部插入一个新元素时间复杂度都是常数级别的。如果列表的个数小于512个并且每个元素的值都小于64字节。&lt;/br&gt;
+场景：分页查询&lt;/br&gt;
+LPUSH key value&lt;/br&gt;
+LRANGE 获取指定范围内的元素&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3set&#34;&gt;3.set
+&lt;/h4&gt;&lt;p&gt;如果集合中的元素都是整数并且元素小于512个，redis会使用整数集合作为底层数据结构。如果不满足的画会使用哈希表作为底层数据结构。无序
+场景：兴趣标签 实时的在线状态&lt;/br&gt;
+SADD  key value&lt;/br&gt;
+SMEMBERS&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4zset&#34;&gt;4.zset
+&lt;/h4&gt;&lt;p&gt;有序集合，如果有序集合的元素个数小于128个，并且每个元素的值小于64字节，redis会使用压缩列表作为底层数据结构。&lt;/br&gt;
+场景：排行榜&lt;/br&gt;
+ZADD&lt;/br&gt;
+ZRANGE 获取范围内的成员&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5hash&#34;&gt;5.hash
+&lt;/h4&gt;&lt;p&gt;哈希存储的就是字符串和字符串值之间的映射。&lt;/br&gt;
+如果哈希类型元素少于512个所有制小于64字节。redis会使用压缩列表作为底层数据结构。不符合则用哈希表&lt;/br&gt;
+HMSET key value key value&lt;/br&gt;
+HGETALL 获取&lt;/br&gt;
+场景：用户信息&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis缓存&#34;&gt;Redis缓存
+&lt;/h3&gt;&lt;p&gt;用户的数据一般都是存储在数据库上的，请求的数量一上来，数据库会奔溃，所以要用Redis作为缓存层，会给Redis里的数据设置过期时间。当缓存数据过期后，用户访问的数据如果不在缓存里，业务系统需要重新生成缓存。&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;缓存雪崩&#34;&gt;缓存雪崩
+&lt;/h4&gt;&lt;p&gt;当大量缓存数据在同一时间过期或者Redis故障宕机，此时有大量的用户请求时，都无法在Redis中处理，于是直接访问数据库，导致压力骤增。
+解决办法&lt;/br&gt;
+1 均匀的设置过期时间，给这些数据的过期时间加上一个随机数.&lt;/br&gt;
+2 互斥锁&lt;/br&gt;
+如果发现访问的数据不在Redis里，就加个互斥锁，保证同一时间内只有一个请求来构建缓存，记得要设置锁的超时时间。&lt;/br&gt;
+3.后台更新缓存，可以看作缓存永久有效，并将更新缓存的工作交由后台线程固定刷新&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;缓存击穿&#34;&gt;缓存击穿
+&lt;/h4&gt;&lt;p&gt;如果缓存中的某个热点数据过期了，此时大量的请求访问了该热点数据，就无法从缓存中读取，直接访问数据库。&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;缓存穿透&#34;&gt;缓存穿透
+&lt;/h4&gt;&lt;p&gt;当用户访问的数据，即不在缓存中，也不在数据库中，导致请求在访问缓存时，发现缓存缺失，在访问数据库的时候，数据库中也没有，导致数据库的压力骤增。首先是业务误操作，和黑客恶意攻击。&lt;/br&gt;
+解决方案&lt;/br&gt;
+1.非法请求的限制&lt;/br&gt;
+2.缓存空值或者默认值&lt;/br&gt;
+3.使用布隆过滤器来快速判断数据是否存在，避免通过查询数据库来判断数据是否存在。&lt;/br&gt;
+布隆过滤器是由位图数组和N个哈希函数组成的，&lt;/br&gt;
+他返回存在，并不一定证明就在，但返回不存在它一定不在&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis如何判断key已经过期了&#34;&gt;Redis如何判断key已经过期了？
+&lt;/h3&gt;&lt;p&gt;每当我们对一个key设置了过期时间时，Redis会把key带上过期时间存储到一个过期字典中，也就是说过期字典保存了数据库中所有key的时间。&lt;/br&gt;
+过期删除策略&lt;/br&gt;
+1，定时删除：在设置key的过期时间时，同时创建一个定时事件，当时间到达时，由事件处理器自动执行key的删除操作。优点时对内存很友好，可以使内存尽快的释放 缺点是，如果过期key较多的话，对CPU不友好。&lt;/br&gt;
+2.惰性删除：就是不主动删除过期键，每次从数据库访问key时，都检测key是否过期，如果过期删除该key。优点是每次访问时，才会检查是否过期，对CPU时间最友好。如果key已经过期的话，只要这个过期key一直没被访问，会造成内存空间浪费。&lt;/br&gt;
+3.定期删除&lt;/br&gt;
+每隔一段时间随机从数据库中取出一定数量的key进行检查，并删除其中过期的key。&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis持久化&#34;&gt;Redis持久化
+&lt;/h3&gt;&lt;p&gt;Redis如何实现数据不丢失，Redis读写都是在内存中，当Redis重启，内存数据会丢失，所以有了持久化,会把数据存储到磁盘。&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;aof日志&#34;&gt;AOF日志
+&lt;/h4&gt;&lt;p&gt;每执行一条写操作命令，就把该命令以追加的方式写入到一个文件中。然后在重启的Redis的时候，先去读这个文件里的命令，并且执行它。&lt;/br&gt;
+AOF写回策略&lt;/br&gt;
+首先Redis执行完写操作命令后，会将命令追加到server.aof.buf缓冲区，&lt;/br&gt;
+然后通过write系统调用，将aof_buf缓冲区的数据写入到AOF文件，此时数据并没有写入到硬盘，而是拷贝到了内核缓冲区page cache等待内核将数据写入硬盘&lt;/br&gt;
+具体内核缓冲区的数据什么时候写入到硬盘，由内核决定。&lt;/br&gt;
+AOF日志过大，会触发什么机制？&lt;/br&gt;
+Redis为了避免AOF文件越写越大，提供了AOF重写机制，当AOF文件的大小超过所设定的阈值，就会启用AOF重写机制，来压缩AOF文件，重写AOF过程是由后台子进程来完成的。&lt;/br&gt;
+具体流程为，在重写时，读取当前数据库中的所有键值对，然后将每一个键值对用一条命令记录到新的AOF文件，等到全部记录完后，就将新的AOF文件替换掉现有的AOF文件，在使用重写机制后，就会读取name最新的value，然后用一条命令记录到新的AOF文件中，最终也只需要根据这个键值对当前最新状态，用一条命令去记录键值对，如果AOF重写过程中失败了，先有的AOF文件会造成污染。&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;rdb快照&#34;&gt;RDB快照
+&lt;/h4&gt;&lt;p&gt;将某一时刻的内存数据，以二进制的方式写入磁盘。然后它是Redis提供了两个命令来生成RDB文件，分别是save和bgsave，执行save命令，就会在主线程生成RDB文件，由于和执行操作命令在同一个线程，所以如果写入RDB文件的时间太长，会阻塞主线程。&lt;/br&gt;
+执行bgsave命令会创建一个子进程来生产RDB文件，这样可以避免主线程的阻塞。&lt;/br&gt;
+Redis的快照是全量快照，在执行快照时，都是把内存中的所有数据都记录到磁盘中。&lt;/br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;写时复制&#34;&gt;写时复制
+&lt;/h4&gt;&lt;p&gt;在执行bgsave命令的时候，会通过fork创建子进程，此时子进程和父进程是共享同一片内存数据的，因为创建子进程的时候，会复制父进程的页表，但是页表指向物理内存还是一个。&lt;/br&gt;
+如果主线程要修改共享数据的某一块数据，就会发生写时复制，于是这块数据的物理内存就会被复制一份，然后主线程在这个数据副本进行修改操作，与此同时，bgsave子进程可以继续把原来的数据写入到RDB文件。&lt;/br&gt;
+所以发生了写时复制后，RDB快照保存的是原本的内存数据。&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;混合持久化&#34;&gt;混合持久化
+&lt;/h3&gt;&lt;p&gt;AOF文件的前半部分是RDB格式的全量数据，后半部分是AOF格式的增量数据。&lt;/br&gt;
+这样做的好处就是重启Redis加载数据的时候，由于前半部分是RDB内容，这样加载的时候速度会很快，然后接下来是Redis后台子进程重写AOF期间，主线程处理的操作命令，可以使得数据更少的丢失。&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;redis的主从复制&#34;&gt;Redis的主从复制
+&lt;/h3&gt;&lt;p&gt;可以保证多台服务器的数据一致性，且主从服务器之间采用的时读写分离的方式&lt;/br&gt;
+主服务器可以进行读写操作，当发生写操作时自动将写操作同步给从服务器，而从服务器一般是只读的，并接受主服务器同步过来写操作命令，然后执行这条命令。&lt;/br&gt;
+也就是说，所有的数据修改只在主服务器上进行，然后将最新的数据同步给从服务器，这样就使得主从服务器的数据是一致的。&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;哨兵模式&#34;&gt;哨兵模式
+&lt;/h3&gt;&lt;p&gt;是一种Redis的一种运行模式，他专注于对Redis实例（主，从节点）运行状态的监控，并能够在主节点发生故障时通过一系列的机制实现选主及主从切换，实现故障转移，确保整个Redis系统的可用性。
+哨兵节点负责三件事情，监控，选主，通知&lt;/br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;如何判断主节点真的故障了&#34;&gt;如何判断主节点真的故障了？
+&lt;/h3&gt;&lt;p&gt;哨兵每隔一秒给所有主从节点发送ping命令，当主节点收到ping命令后，会发送一个响应命令给哨兵，这样可以判断它们是否在正常运行。&lt;/br&gt;
+一般会部署最少三个哨兵节点部署成哨兵集群，通过多个哨兵节点一起判断，就可以避免单个哨兵因为自身网络状况不好，然后误判主节点下线的情况。&lt;/br&gt;
+选出哨兵leader&lt;/br&gt;
+某个哨兵判断主节点客观下线以后，该哨兵回发起投票，需要满足两个条件，拿到半数以上的赞成票，拿到的票数同时还需要大于等于哨兵配置文件中的值&lt;/br&gt;
+由哨兵leader进行主从故障转移&lt;/br&gt;
+在已下线主节点（旧主节点）属下的所有从节点里面，挑出一个从节点，并将其转换为主节点&lt;/br&gt;
+1.过滤掉已经离线的从节点&lt;/br&gt;
+2.过滤掉历史网络连接状态不好的从节点&lt;/br&gt;
+3.将剩下的从节点，进行三轮考察：优先级，复制进度，id号，在每一轮考察过程中，如果找到了一个胜出的从节点，就将其作为新主节点&lt;/br&gt;
+4.让已下线主节点属下的所有从节点修改复制目标，需改伟复制新主机节点&lt;/br&gt;
+5.将新主节点的IP地址和信息，通过发布订阅通知给客户端&lt;/br&gt;
+6.继续监视旧主节点，当这个旧主节点重新上线时，将它设置伟新主机节点的从节点。&lt;/br&gt;&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>MySQL</title>
